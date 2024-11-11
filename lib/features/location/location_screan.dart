@@ -13,7 +13,7 @@ class live_location extends StatefulWidget {
 }
 
 class _live_locationState extends State<live_location> {
-  Completer<GoogleMapController> _googleMapController = Completer();
+  final Completer<GoogleMapController> _googleMapController = Completer();
   CameraPosition? _cameraPosition;
   Location? _location;
   LocationData? _currentLocation;
@@ -25,12 +25,13 @@ class _live_locationState extends State<live_location> {
 
   _init() async {
     _location = Location();
-    _cameraPosition = CameraPosition(
-        target: LatLng(0, 0), // this is just the example lat and lng for initializing
-        zoom: 15
-    );
+    _cameraPosition = const CameraPosition(
+        target: LatLng(
+            0, 0), // this is just the example lat and lng for initializing
+        zoom: 15);
     _initLocation();
   }
+
   //function to listen when we move position
   _initLocation() {
     //use this to go to current location instead
@@ -39,23 +40,16 @@ class _live_locationState extends State<live_location> {
     });
     _location?.onLocationChanged.listen((newLocation) {
       _currentLocation = newLocation;
-      moveToPosition(LatLng(_currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0));
+      moveToPosition(LatLng(
+          _currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0));
     });
   }
+
   moveToPosition(LatLng latLng) async {
     GoogleMapController mapController = await _googleMapController.future;
-    mapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: latLng,
-                zoom: 15
-            )
-        )
-    );
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: latLng, zoom: 15)));
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,24 +61,25 @@ class _live_locationState extends State<live_location> {
   Widget _buildBody() {
     return _getMap();
   }
+
   Widget _getMarker() {
     return Container(
       width: 40,
       height: 40,
-      padding: EdgeInsets.all(2),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(100),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.grey,
-                offset: Offset(0,3),
+                offset: Offset(0, 3),
                 spreadRadius: 4,
-                blurRadius: 6
-            )
-          ]
-      ),
-      child:  ClipOval(child: Image.network("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg")),
+                blurRadius: 6)
+          ]),
+      child: ClipOval(
+          child: Image.network(
+              "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg")),
     );
   }
 
@@ -101,13 +96,8 @@ class _live_locationState extends State<live_location> {
             }
           },
         ),
-
         Positioned.fill(
-            child: Align(
-                alignment: Alignment.center,
-                child: _getMarker()
-            )
-        )
+            child: Align(alignment: Alignment.center, child: _getMarker()))
       ],
     );
   }
